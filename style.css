@@ -32,7 +32,8 @@ body::after {
   margin-bottom: 1200px;
 
   --speed-animation: 50s;
-  --get-rotX3d: calc(var(--rotX3d) - 15deg);
+  /* --get-rotX3d: calc(var(--rotX3d) - 15deg); */
+  --get-rotX3d: 0deg;
 }
 
 /* ================= PLANET ================= */
