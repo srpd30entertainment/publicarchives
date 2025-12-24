@@ -2,6 +2,54 @@
 
 <link rel="stylesheet" href="style.css">
 
+<style>
+.objectPara-front-1 {
+  position: absolute;
+
+  /* Posisi manual default di CSS */
+  --objectPara-x: 50%;
+  --objectPara-y: 300px;  /* posisi default manual */
+  --parallax-y: 0px;
+  --z-depth: 1;          /* depth untuk parallax */
+
+  left: var(--objectPara-x);
+  top: var(--objectPara-y);
+
+  transform: translateX(-50%) translateY(var(--parallax-y));
+
+  width: 300px;
+  height: 300px;
+
+  will-change: transform;
+
+  z-index: calc(var(--z-depth)); /* lambat = belakang, cepat = depan */
+}
+
+.objectPara-front-2 {
+  position: absolute;
+
+  /* Posisi manual default di CSS */
+  --objectPara-x: 50%;
+  --objectPara-y: 300px;  /* posisi default manual */
+  --parallax-y: 0px;
+  --z-depth: 0.9;          /* depth untuk parallax */
+
+  left: var(--objectPara-x);
+  top: var(--objectPara-y);
+
+  transform: translateX(-50%) translateY(var(--parallax-y));
+
+  width: 300px;
+  height: 300px;
+
+  will-change: transform;
+
+  z-index: calc(var(--z-depth)); /* lambat = belakang, cepat = depan */
+}
+
+
+</style>
+
 <body>
     <div class="background-world">
         <img src="background/bg.png"/>
@@ -10,4 +58,41 @@
     <div class="bg-main bg-depth-0">
         <img src="svg/art-background.svg"/>
     </div>
+
+    <div class="objectPara-front-2">
+        <img src="test-parallax.png"/>
+    </div>
 </body>
+
+<script>
+    const obj = document.querySelector('.objectPara-front-1') || document.querySelector('.objectPara-front-2');
+    let window_h = window.innerHeight;
+
+    function updateParallax() {
+    const scrollY = window.scrollY;
+    const vpy_window = window_h / 2;
+
+    // ambil depth dari CSS
+    const css = getComputedStyle(obj);
+    const objectPara_y = parseFloat(css.getPropertyValue('--objectPara-y'));
+    const depth_factor = parseFloat(css.getPropertyValue('--z-depth'));
+
+    // offset relatif ke center viewport
+    const parallax_offset = (objectPara_y - (scrollY + vpy_window)) / (depth_factor);
+
+    // update CSS variable
+    obj.style.setProperty('--parallax-y', `${parallax_offset}px`);
+    }
+
+    // loop real-time
+    function loop() {
+    updateParallax();
+    requestAnimationFrame(loop);
+    }
+    loop();
+
+    window.addEventListener('resize', () => {
+    window_h = window.innerHeight;
+    });
+
+</script>

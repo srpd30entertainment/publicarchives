@@ -6,11 +6,13 @@ html, body {
   margin: 0;
   padding: 0;
 }
+
+
 .background-world {
   position: fixed;
   width: 15vw;
   height: auto;
-  z-index: -10;
+  z-index: -100000000;
   pointer-events: none;
 }
 
