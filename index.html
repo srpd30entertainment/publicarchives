@@ -49,7 +49,7 @@
 
 .object-test-01{
   --objectPara-x: 60%;
-  --objectPara-y: 1300px;
+  --objectPara-y: 1700px;
   --object-width: 300px;
   --object-height: 300px;
 }
@@ -89,11 +89,10 @@
     objects.forEach(obj => {
         const css = getComputedStyle(obj);
         const objectPara_y = parseFloat(css.getPropertyValue('--objectPara-y'));
-        const depth = parseFloat(css.getPropertyValue('--z-depth')) || 1;
+        const depth = parseFloat(css.getPropertyValue('--z-depth'));
 
-        // rumus ASLI kamu
-        const parallax_offset =
-        (objectPara_y - (scrollY + vpy_window)) / depth;
+        // rumus parallax
+        const parallax_offset = (objectPara_y - (scrollY + vpy_window)) / depth;
 
         obj.style.setProperty('--parallax-y', `${parallax_offset}px`);
     });
