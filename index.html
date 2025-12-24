@@ -3,50 +3,64 @@
 <link rel="stylesheet" href="style.css">
 
 <style>
-.objectPara-front-1 {
+
+.objectParallax {
   position: absolute;
 
-  /* Posisi manual default di CSS */
-  --objectPara-x: 50%;
-  --objectPara-y: 300px;  /* posisi default manual */
+  --objectPara-x: 0px;
+  --objectPara-y: 0px;
   --parallax-y: 0px;
-  --z-depth: 1;          /* depth untuk parallax */
+  --z-depth: 1;
+
+  --object-width: auto;
+  --object-height: auto;
 
   left: var(--objectPara-x);
   top: var(--objectPara-y);
 
-  transform: translateX(-50%) translateY(var(--parallax-y));
-
-  width: 300px;
-  height: 300px;
-
-  will-change: transform;
-
-  z-index: calc(var(--z-depth)); /* lambat = belakang, cepat = depan */
-}
-
-.objectPara-front-2 {
-  position: absolute;
-
-  /* Posisi manual default di CSS */
-  --objectPara-x: 50%;
-  --objectPara-y: 300px;  /* posisi default manual */
-  --parallax-y: 0px;
-  --z-depth: 0.9;          /* depth untuk parallax */
-
-  left: var(--objectPara-x);
-  top: var(--objectPara-y);
+  width: var(--object-width);
+  height: var(--object-height);
 
   transform: translateX(-50%) translateY(var(--parallax-y));
 
-  width: 300px;
-  height: 300px;
-
   will-change: transform;
-
-  z-index: calc(var(--z-depth)); /* lambat = belakang, cepat = depan */
+  z-index: calc(var(--z-depth));
 }
 
+.objectParallax img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* atau cover */
+}
+
+/* Variasi depth saja */
+.parallaxBack-1  {
+    --z-depth: -3;
+}
+.parallaxBack-2  {
+    --z-depth: -5;
+}
+.parallaxFront-1 {
+    --z-depth: 1; 
+}
+.parallaxFront-2 {
+    --z-depth: 0.9;
+}
+
+.object-test-01{
+  --objectPara-x: 60%;
+  --objectPara-y: 1300px;
+  --object-width: 300px;
+  --object-height: 300px;
+}
+
+.object-test-02 {
+  --objectPara-x: 75%;
+  --objectPara-y: 1900px;
+
+  --object-width: 600px;
+  --object-height: 600px;
+}
 
 </style>
 
@@ -59,32 +73,32 @@
         <img src="svg/art-background.svg"/>
     </div>
 
-    <div class="objectPara-front-2">
-        <img src="test-parallax.png"/>
-    </div>
+    <div class="object-test-02 objectParallax parallaxFront-1"><img src="test-parallax.png"/></div>
+    <div class="object-test-01 objectParallax parallaxBack-1"><img src="test-parallax.png"/></div>
+
 </body>
 
 <script>
-    const obj = document.querySelector('.objectPara-front-1') || document.querySelector('.objectPara-front-2');
+    const objects = document.querySelectorAll('.objectParallax');
     let window_h = window.innerHeight;
 
     function updateParallax() {
     const scrollY = window.scrollY;
     const vpy_window = window_h / 2;
 
-    // ambil depth dari CSS
-    const css = getComputedStyle(obj);
-    const objectPara_y = parseFloat(css.getPropertyValue('--objectPara-y'));
-    const depth_factor = parseFloat(css.getPropertyValue('--z-depth'));
+    objects.forEach(obj => {
+        const css = getComputedStyle(obj);
+        const objectPara_y = parseFloat(css.getPropertyValue('--objectPara-y'));
+        const depth = parseFloat(css.getPropertyValue('--z-depth')) || 1;
 
-    // offset relatif ke center viewport
-    const parallax_offset = (objectPara_y - (scrollY + vpy_window)) / (depth_factor);
+        // rumus ASLI kamu
+        const parallax_offset =
+        (objectPara_y - (scrollY + vpy_window)) / depth;
 
-    // update CSS variable
-    obj.style.setProperty('--parallax-y', `${parallax_offset}px`);
+        obj.style.setProperty('--parallax-y', `${parallax_offset}px`);
+    });
     }
 
-    // loop real-time
     function loop() {
     updateParallax();
     requestAnimationFrame(loop);
@@ -94,5 +108,6 @@
     window.addEventListener('resize', () => {
     window_h = window.innerHeight;
     });
+
 
 </script>
